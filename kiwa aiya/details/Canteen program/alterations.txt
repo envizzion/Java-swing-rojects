@@ -1,0 +1,18 @@
+
+
+
+unit price  given with supplier order is buying price, it is in orders
+
+unit price  in food_item is the selling price
+         this is the unit price for cus orders 
+
+getting suplier id from name
+  ResultSet rs1=s.executeQuery("select Sup_ID from supplier where sup_name='"+SupName.getSelectedItem()+"'");
+            String supID="";
+            while(rs1.next()){supID=rs1.getString("Sup_ID");}
+
+
+getting foodid from fooditem
+ ResultSet rs=s.executeQuery("select Food_ID from food_item where food_name='"+food.getSelectedItem()+"'");
+            String foodID="";
+            while(rs.next()){foodID=rs.getString("Food_ID");}

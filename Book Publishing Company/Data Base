@@ -1,0 +1,257 @@
+-- MySQL Administrator dump 1.4
+--
+-- ------------------------------------------------------
+-- Server version	5.1.39-community
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+
+
+--
+-- Create schema book
+--
+
+CREATE DATABASE IF NOT EXISTS book;
+USE book;
+
+--
+-- Definition of table `authors`
+--
+
+DROP TABLE IF EXISTS `authors`;
+CREATE TABLE `authors` (
+  `idauthor` int(11) NOT NULL,
+  `first_name` varchar(45) DEFAULT NULL,
+  `last_name` varchar(45) DEFAULT NULL,
+  `address` varchar(45) DEFAULT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  `phone` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`idauthor`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `authors`
+--
+
+/*!40000 ALTER TABLE `authors` DISABLE KEYS */;
+INSERT INTO `authors` (`idauthor`,`first_name`,`last_name`,`address`,`email`,`phone`) VALUES 
+ (1,'Martin','Wickramasighe','Galle','martinW@gmail.com','0474571254'),
+ (2,'Jagath','Rathnayake','Kohuwella','jagath@gmail.com','0777854512'),
+ (3,'Kaplia','Siriwardhana','Badulla','kaplia@gmail.com','0717482166');
+/*!40000 ALTER TABLE `authors` ENABLE KEYS */;
+
+
+--
+-- Definition of table `books`
+--
+
+DROP TABLE IF EXISTS `books`;
+CREATE TABLE `books` (
+  `ISBN` int(11) NOT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `authorid` int(11) DEFAULT NULL,
+  `type` varchar(45) DEFAULT NULL,
+  `cost` double DEFAULT NULL,
+  `selling_price` double DEFAULT NULL,
+  `quantity` int(11) DEFAULT NULL,
+  PRIMARY KEY (`ISBN`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `books`
+--
+
+/*!40000 ALTER TABLE `books` DISABLE KEYS */;
+INSERT INTO `books` (`ISBN`,`name`,`authorid`,`type`,`cost`,`selling_price`,`quantity`) VALUES 
+ (6573,'M',1,'Workbook',500,560,90),
+ (10025,'Madolduwa',1,'Novel',350,410,890),
+ (21547,'Ape Gama',1,'Novel',475,510,100),
+ (45687,'Eda Heladiwa',2,'Novel',450,500,125),
+ (45753,'Pysics MCQ 2000',3,'Educational',700,750,400),
+ (45813,'Thaapa Bawthikaya',3,'Educational',750,800,1500);
+/*!40000 ALTER TABLE `books` ENABLE KEYS */;
+
+
+--
+-- Definition of table `login`
+--
+
+DROP TABLE IF EXISTS `login`;
+CREATE TABLE `login` (
+  `loginid` int(11) NOT NULL AUTO_INCREMENT,
+  `count` int(11) DEFAULT NULL,
+  `username` varchar(45) NOT NULL,
+  `password` varchar(45) NOT NULL,
+  PRIMARY KEY (`loginid`) USING BTREE,
+  KEY `fk_login_login_infor1` (`count`),
+  CONSTRAINT `fk_login_login_infor1` FOREIGN KEY (`count`) REFERENCES `login_infor` (`count`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `login`
+--
+
+/*!40000 ALTER TABLE `login` DISABLE KEYS */;
+INSERT INTO `login` (`loginid`,`count`,`username`,`password`) VALUES 
+ (1,NULL,'java','java');
+/*!40000 ALTER TABLE `login` ENABLE KEYS */;
+
+
+--
+-- Definition of table `login_infor`
+--
+
+DROP TABLE IF EXISTS `login_infor`;
+CREATE TABLE `login_infor` (
+  `count` int(11) NOT NULL AUTO_INCREMENT,
+  `date` date DEFAULT NULL,
+  `time` time DEFAULT NULL,
+  PRIMARY KEY (`count`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `login_infor`
+--
+
+/*!40000 ALTER TABLE `login_infor` DISABLE KEYS */;
+/*!40000 ALTER TABLE `login_infor` ENABLE KEYS */;
+
+
+--
+-- Definition of table `outlets`
+--
+
+DROP TABLE IF EXISTS `outlets`;
+CREATE TABLE `outlets` (
+  `idoutlet` int(11) NOT NULL,
+  `outletname` varchar(45) DEFAULT NULL,
+  `city` varchar(45) DEFAULT NULL,
+  `phone` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`idoutlet`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `outlets`
+--
+
+/*!40000 ALTER TABLE `outlets` DISABLE KEYS */;
+INSERT INTO `outlets` (`idoutlet`,`outletname`,`city`,`phone`) VALUES 
+ (1,'Sarasavi','Nugegoda','0112457458'),
+ (2,'Sadeepa','Maharagama','0112345678'),
+ (3,'My Books','Gampaha','0112585456'),
+ (4,'Parashakthi','Bandarawela','0578545789'),
+ (5,'M D Gunasena','Badulla','0554575123');
+/*!40000 ALTER TABLE `outlets` ENABLE KEYS */;
+
+
+--
+-- Definition of table `publication`
+--
+
+DROP TABLE IF EXISTS `publication`;
+CREATE TABLE `publication` (
+  `idpublication` int(11) NOT NULL,
+  `ISBN` int(11) NOT NULL,
+  `idoutlets` int(11) NOT NULL,
+  `quantity` int(11) DEFAULT NULL,
+  `unit_price` double DEFAULT NULL,
+  `sub_total` int(11) DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  `time` time DEFAULT NULL,
+  PRIMARY KEY (`ISBN`,`idoutlets`,`idpublication`) USING BTREE,
+  KEY `fk_books_has_outlets_outlets1` (`idoutlets`),
+  KEY `fk_books_has_outlets_books` (`ISBN`),
+  CONSTRAINT `fk_books_has_outlets_books` FOREIGN KEY (`ISBN`) REFERENCES `books` (`ISBN`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_books_has_outlets_outlets1` FOREIGN KEY (`idoutlets`) REFERENCES `outlets` (`idoutlet`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `publication`
+--
+
+/*!40000 ALTER TABLE `publication` DISABLE KEYS */;
+INSERT INTO `publication` (`idpublication`,`ISBN`,`idoutlets`,`quantity`,`unit_price`,`sub_total`,`date`,`time`) VALUES 
+ (1,10025,1,10,450,4500,'2014-04-02','01:57:35'),
+ (3,10025,1,100,500,50000,'2014-04-02','02:09:07'),
+ (2,10025,2,100,500,50000,'2014-04-02','02:03:06'),
+ (4,10025,3,150,100,15000,'2014-04-02','02:11:23'),
+ (5,10025,3,150,100,15000,'2014-04-02','02:12:19'),
+ (6,21547,3,100,450,45000,'2014-04-02','11:37:25');
+/*!40000 ALTER TABLE `publication` ENABLE KEYS */;
+
+
+--
+-- Definition of table `sale`
+--
+
+DROP TABLE IF EXISTS `sale`;
+CREATE TABLE `sale` (
+  `idivoice` varchar(45) NOT NULL,
+  `books_ISBN` int(11) NOT NULL,
+  `quantity` int(11) DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  `time` time DEFAULT NULL,
+  `total` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`idivoice`,`books_ISBN`),
+  KEY `fk_sale_books1` (`books_ISBN`),
+  CONSTRAINT `fk_sale_books1` FOREIGN KEY (`books_ISBN`) REFERENCES `books` (`ISBN`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `sale`
+--
+
+/*!40000 ALTER TABLE `sale` DISABLE KEYS */;
+INSERT INTO `sale` (`idivoice`,`books_ISBN`,`quantity`,`date`,`time`,`total`) VALUES 
+ ('1',10025,500,'2014-04-02','02:51:37',75000),
+ ('2',10025,1000,'2014-04-02','08:36:15',450000),
+ ('3',45687,50,'2014-04-02','11:43:37',22500),
+ ('4',10025,100,'2014-04-21','20:49:28',41000),
+ ('5',45753,100,'2014-04-21','20:52:08',75000),
+ ('6',45687,25,'2014-04-22','11:32:02',12500),
+ ('7',6573,10,'2014-04-26','11:34:57',5600),
+ ('8',10025,10,'2014-06-16','06:31:40',4100);
+/*!40000 ALTER TABLE `sale` ENABLE KEYS */;
+
+
+--
+-- Definition of table `type`
+--
+
+DROP TABLE IF EXISTS `type`;
+CREATE TABLE `type` (
+  `idtype` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`idtype`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `type`
+--
+
+/*!40000 ALTER TABLE `type` DISABLE KEYS */;
+INSERT INTO `type` (`idtype`,`type`) VALUES 
+ (1,'Educational'),
+ (2,'Novel'),
+ (3,'Workbook'),
+ (4,'Fairy Tail'),
+ (5,'Shot Story');
+/*!40000 ALTER TABLE `type` ENABLE KEYS */;
+
+
+
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
